@@ -3,6 +3,8 @@ from . import constants as c
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+import os
+
 
 def __prompt_email_password():
   u = input("Email: ")

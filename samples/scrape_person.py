@@ -1,4 +1,3 @@
-import os
 from linkedin_scraper import actions
 from driver_setup import setup_driver
 import time
@@ -58,16 +57,24 @@ def search_company_employees(driver, company_name):
     # Send keys in search bar "{company_name} LinkedIn employees"
     search_bar = driver.find_element(By.XPATH, '//textarea[@title="Rechercher"]')
     search_bar.send_keys(f"{company_name} linkedin employees", Keys.ENTER)
-    time.sleep(2)
 
 
 def get_google_search_results(driver):
     all_a_tag = driver.find_elements(By.TAG_NAME, 'a')
 
+    hrefs = []
     for a_tag in all_a_tag:
         href = a_tag.get_attribute('href')
-        if href and '/in/' in href:
+        if href and (('/in/' in href) or ('/post/' in href)):
             print(href)
+            hrefs.append(href)
+
+    return hrefs
+
+
+def click_next_page(driver):
+    next_button = driver.find_element(By.ID, "pnnext")
+    next_button.click()
 
 
 if __name__ == "__main__":
@@ -79,30 +86,34 @@ if __name__ == "__main__":
 
     # Go in google search
     driver.get('https://www.google.com')
-    time.sleep(2)
+    time.sleep(3)
 
     # Accept cookies
     accept_cookies(driver)
     time.sleep(2)
 
-    #
-
+    page = 1
+    page_limit = 10
     for index, row in df_companies.iterrows():
 
         # Search company employees on Google
         search_company_employees(driver, row['name'])
+        time.sleep(2)
 
-        # Get employees details
-        get_google_search_results(driver)
+        while page <= page_limit:
+            print(f"------------------Page:{page}----------------------")
+            # Get page search results
+            search_results = get_google_search_results(driver)
+            print(f"Result found: {len(search_results)}")
+            time.sleep(3)
 
-        #
-
-
-
-
+            # Click next page
+            click_next_page(driver)
+            page = page + 1
+            time.sleep(4)
 
     # Login LinkedIn
-    #actions.login(driver, email, password)
+    #actions.login(driver)
 
     #for index, row in df_companies.iterrows():
 

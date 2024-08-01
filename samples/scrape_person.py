@@ -65,7 +65,7 @@ def get_google_search_results(driver):
     hrefs = []
     for a_tag in all_a_tag:
         href = a_tag.get_attribute('href')
-        if href and (('/in/' in href) or ('/post/' in href)):
+        if href and (('/in/' in href) or ('/posts/' in href)):
             print(href)
             hrefs.append(href)
 
@@ -84,27 +84,31 @@ if __name__ == "__main__":
     # Load company list
     df_companies = pd.read_csv('company.csv')
 
-    # Go in google search
-    driver.get('https://www.google.com')
-    time.sleep(3)
-
-    # Accept cookies
-    accept_cookies(driver)
-    time.sleep(2)
-
-    page = 1
-    page_limit = 10
     for index, row in df_companies.iterrows():
+        page = 1
+        page_limit = 10
 
+        # Go in google search
+        driver.get('https://www.google.com')
+        time.sleep(3)
+
+        # Accept cookies
+        try:
+            accept_cookies(driver)
+            time.sleep(2)
+        except:
+            pass
+
+        print(f"######### {row['name'].upper()} #############")
         # Search company employees on Google
         search_company_employees(driver, row['name'])
         time.sleep(2)
 
         while page <= page_limit:
-            print(f"------------------Page:{page}----------------------")
+            print(f"------------------Page {page}----------------------")
             # Get page search results
             search_results = get_google_search_results(driver)
-            print(f"Result found: {len(search_results)}")
+            print(f"Results found: {len(search_results)}")
             time.sleep(3)
 
             # Click next page

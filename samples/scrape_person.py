@@ -74,10 +74,6 @@ if __name__ == "__main__":
     # Setup driver
     driver = setup_driver()
 
-    # Load creds
-    email = os.getenv("LINKEDIN_USER")
-    password = os.getenv("LINKEDIN_PASSWORD")
-
     # Load company list
     df_companies = pd.read_csv('company.csv')
 

@@ -12,8 +12,12 @@ def setup_driver():
     options.add_argument("--disable-gpu")
     options.add_argument("--remote-debugging-port=9222")
 
-    options.binary_location = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe'  # Set the path to your custom Chrome binary
-    driver = webdriver.Chrome(options=options)
-    driver.maximize_window()
+    try:
+        options.binary_location = 'C:/Program Files/BraveSoftware/Brave-Browser/Application/brave.exe'
+        driver = webdriver.Chrome(options=options)
+    except Exception as e:
+        options.binary_location = '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'
+        driver = webdriver.Chrome(options=options)
 
+    driver.maximize_window()
     return driver

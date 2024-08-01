@@ -13,7 +13,11 @@ def page_has_loaded(driver):
     page_state = driver.execute_script('return document.readyState;')
     return page_state == 'complete'
 
-def login(driver, email=None, password=None, cookie = None, timeout=10):
+def login(driver, cookie = None, timeout=10):
+    # Load creds
+    email = os.getenv("LINKEDIN_USER")
+    password = os.getenv("LINKEDIN_PASSWORD")
+
     if cookie is not None:
         return _login_with_cookie(driver, cookie)
   

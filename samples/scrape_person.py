@@ -77,9 +77,33 @@ def click_next_page(driver):
     next_button.click()
 
 
+def close_contextual_signin_modal_screen(driver):
+
+    # Select modal screen
+    modal_screen = driver.find_element(By.XPATH, '//section[@aria-modal="true"]')
+
+    if modal_screen:
+        # Select all buttons in modal_screen
+        all_buttons = modal_screen.find_elements(By.TAG_NAME, 'button')
+
+        # Select button where "dismiss" in class attribute
+        for button in all_buttons:
+            button_class_value = button.get_attribute('class')
+            if 'dismiss' in button_class_value:
+                button.click()
+                break
+
+    else:
+        print("No contextual signin modal screen")
+
+
 if __name__ == "__main__":
     # Setup driver
     driver = setup_driver()
+
+    #driver.get("https://fr.linkedin.com/posts/simon-berthou-baa338a8_hydrog%C3%A8ne-activity-7110899789700939777-afsy")
+    #time.sleep(3)
+    #close_contextual_signin_modal_screen(driver)
 
     # Load company list
     df_companies = pd.read_csv('company.csv')
